@@ -1,11 +1,14 @@
 {
   "name": "user_microservice",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "npx nodemon src/index.js"
+    "dev": "npx nodemon src/index.js",
+    "migration:generate": "sequelize-cli migration:generate --name $npm_config_name",
+    "migration:run": "sequelize-cli db:migrate",
+    "migration:undo": "sequelize-cli db:migrate:undo",
+    "init": "docker compose up -d && npm run migration:run"
   },
   "repository": {
     "type": "git",
@@ -30,5 +33,6 @@
   "devDependencies": {
     "nodemon": "^3.0.3",
     "sequelize-cli": "^6.6.2"
-  }
+  },
+  "description": ""
 }
