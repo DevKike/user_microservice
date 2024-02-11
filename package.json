@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "npx nodemon src/index.js",
+    "test": "jest",
+    "test:dev": "jest --coverage",
     "migration:generate": "sequelize-cli migration:generate --name $npm_config_name",
     "migration:run": "sequelize-cli db:migrate",
     "migration:undo": "sequelize-cli db:migrate:undo",
