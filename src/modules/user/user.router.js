@@ -1,8 +1,9 @@
 const express = require("express");
-const { registerUser, loginUser, getData, updateData, deleteUser } = require("./controller/user.controller");
+const { registerUser, loginUser, getData, updateData, deleteUser, validateAccess } = require("./controller/user.controller");
 const schemaValidator = require("../../middleware/schemaValidator.middleware");
-const { registerSchema, loginSchema, updateSchema } = require("./schema/user.schema");
+const { registerSchema, loginSchema, updateSchema, roleSchema } = require("./schema/user.schema");
 const authToken = require("../../middleware/authToken.middleware");
+const { ROLES } = require("../../config/config");
 
 const userRouter = express.Router();
 
@@ -88,6 +89,13 @@ userRouter.delete("/delete", authToken(), async (req, res) => {
       error: error.message,
     });
   }
+});
+
+userRouter.post("/validate/access", authToken(), schemaValidator(roleSchema), (req, res) => {
+  const status = validateAccess(req.role, req.body.roles);
+  res.status(200).json({
+    status
+  });
 });
 
 module.exports = userRouter;

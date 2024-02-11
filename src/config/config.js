@@ -14,5 +14,9 @@ module.exports = {
   },
   TOKEN: {
     jwtToken: process.env.SECRET_ACCESS_TOKEN,
+  },
+  ROLES: {
+    ADMIN: "admin",
+    USER: "user"
   }
 };

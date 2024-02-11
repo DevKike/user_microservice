@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { ROLES } = require("../../../config/config");
 const customMessages = {
   "string.email": "The email doesn't comply with the expected format!"
 };
@@ -7,6 +8,8 @@ const name = Joi.string().min(4).max(255);
 const last_name = Joi.string().min(3).max(225);
 const email = Joi.string().min(6).max(225).email().message(customMessages);
 const password = Joi.string().min(6).max(1024);
+const role = Joi.string().valid(ROLES.ADMIN, ROLES.USER);
+const roles = Joi.array().items(Joi.string());
 
 const registerSchema = Joi.object({
   name: name.required(),
@@ -25,6 +28,10 @@ const updateSchema = Joi.object({
   last_name,
   email,
   password
-})
+});
 
-module.exports = { registerSchema, loginSchema, updateSchema };
+const roleSchema = Joi.object({
+  roles: roles.required()
+});
+
+module.exports = { registerSchema, loginSchema, updateSchema, roleSchema };

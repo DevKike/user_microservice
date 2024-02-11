@@ -9,9 +9,9 @@ const verifyToken = (token) => {
     }
 };
 
-const signToken = (userId) => {
+const signToken = (data) => {
     try {
-        return sign({userId}, TOKEN.jwtToken, {
+        return sign(data, TOKEN.jwtToken, {
             expiresIn: "24h"
         });
     } catch (error) {

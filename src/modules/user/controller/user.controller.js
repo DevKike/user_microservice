@@ -1,3 +1,4 @@
+const { ROLES } = require("../../../config/config");
 const { hash, compare } = require("../../../util/bcrypt");
 const { signToken } = require("../../../util/jwtToken");
 const { register, findUserBy, update, destroy } = require("../service/user.service");
@@ -33,7 +34,7 @@ const loginUser = async ({ email, password }) => {
       throw new Error("Incorrect email or password");
     }
 
-    const token = signToken(user.id);
+    const token = signToken({ userId: user.id, role: ROLES.USER });
     
     return token;
   } catch (error) {
@@ -82,4 +83,10 @@ const deleteUser = async (userId) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getData, updateData, deleteUser };
+const validateAccess = (role, roles) => {
+  const found = roles.find(item => item === role);
+  if (found) return true;
+  return false; 
+}
+
+module.exports = { registerUser, loginUser, getData, updateData, deleteUser, validateAccess };

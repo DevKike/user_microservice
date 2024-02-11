@@ -27,15 +27,15 @@ const UserSchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
+  role: {
+    allowNull: false,
+    type: DataTypes.STRING,
+
+  }
 };
 
 class User extends Model {
-  static associate(models) {
-    this.hasMany(models.ToDo, {
-      as: "todo",
-      foreignKey: "userId",
-    });
-  }
+  static associate(models) {}
 
   static config(sequelize) {
     return {

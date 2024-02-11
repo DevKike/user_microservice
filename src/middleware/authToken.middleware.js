@@ -13,6 +13,7 @@ const authToken = () => {
       const decoded = verifyToken(token);
 
       req.user = decoded.userId;
+      req.role = decoded.role;
       next();
     } catch (error) {
       res.status(403).send({
