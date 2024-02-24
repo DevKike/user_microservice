@@ -1,7 +1,10 @@
-const { ROLES } = require("../../../config/config");
+const path = require("path");
+const { ROLES, URL } = require("../../../config/config");
 const { hash, compare } = require("../../../util/bcrypt");
 const { signToken } = require("../../../util/jwtToken");
 const { register, findUserBy, update, destroy } = require("../service/user.service");
+const fs = require("fs");
+const { post } = require("../../../util/http");
 
 const registerUser = async (user) => {
   try {
@@ -12,10 +15,43 @@ const registerUser = async (user) => {
     }
 
     const password = hash(user.password);
-    const newUser = await register({ ...user, password });
+    const newUser = await register({ ...user, password, role: ROLES.USER });
+    // TODO: Agregar envio de correo
+
+    const token = signToken({ userId: newUser.toJSON().id });
+    const url = `http://localhost:3000/validate/${token}`;
+
+    const text = fs.readFileSync(path.join(process.cwd(), "src/static/welcomeEmail.html"), "utf8");
+    const variables = [
+      {
+        name: "%name%",
+        value: `${user.name} ${user.last_name}`
+      },
+      {
+        name: "%link%",
+        value: url
+      },
+      {
+        name: "%link_2%",
+        value: url
+      }
+    ];
+
+    let template = "";
+    for(let variable of variables) {
+      template = text.replace(variable.name, variable.value);
+    }
+
+    const url_notification = `${URL.NOTIFICATION}notification/`;
+    await post(url_notification, {
+      to: user.email,
+      subject: "Bienvenido a notly",
+      message: template
+    });
 
     return newUser;
   } catch (error) {
+    console.log("error", error);
     throw error;
   }
 };

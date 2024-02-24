@@ -18,5 +18,8 @@ module.exports = {
   ROLES: {
     ADMIN: "admin",
     USER: "user"
+  },
+  URL: {
+    NOTIFICATION: process.env.URL_NOTIFICATION
   }
 };
